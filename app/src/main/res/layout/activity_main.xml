@@ -16,5 +16,13 @@
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:text="Welcome"/>
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/btn_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:textColor="@color/colorAccent"
+            android:text="LOGOUT"/>
     </LinearLayout>
 </LinearLayout>
