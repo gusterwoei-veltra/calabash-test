@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/login_bg">
+    <TextView
+        style="@style/TextAppearance.AppCompat.Headline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="60dp"
+        android:textColor="@color/white"
+        android:textScaleX="1.05"
+        android:text="@string/app_name"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="15dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:minHeight="160dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:background="#CCFFFFFF">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold"
+                android:textScaleX="1.05"
+                android:text="Sign In"/>
+            <EditText
+                style="@style/LoginEditText"
+                android:id="@+id/edt_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="Username"/>
+            <EditText
+                style="@style/LoginEditText"
+                android:id="@+id/edt_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="Password"/>
+            <Button
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="LOG IN"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
