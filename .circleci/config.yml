@@ -1,35 +1,50 @@
-version: 1
-machine:
-  environment:
-    # PATH: "~/$CIRCLE_PROJECT_REPONAME/gradle-2.9/bin:$PATH"
-    # TERM: "dumb"
-    # ADB_INSTALL_TIMEOUT: "10"
-    GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
-dependencies:
-  pre:
-    - echo y | android update sdk --no-ui --all --filter tools
-    - echo y | android update sdk --no-ui --all --filter platform-tools
-    - echo y | android update sdk --no-ui --all --filter extra-android-m2repository
-    - echo y | android update sdk --no-ui --all --filter extra-android-support
-    - echo y | android update sdk --no-ui --all --filter extra-google-google_play_services
-    - echo y | android update sdk --no-ui --all --filter extra-google-m2repository
-    - echo y | android update sdk --no-ui --all --filter android-22
-    - echo y | android update sdk --no-ui --all --filter build-tools-23.0.2
-    - echo y | android update sdk -a -u -t sys-img-armeabi-v7a-google_apis-22
-    - android list targets
-test:
-  override:
-    - echo no | android create avd -n custom-android22-googleapis -t "android-22" --abi google_apis/armeabi-v7a
-    - android list avd
-    - emulator -avd custom-android22-googleapis -no-audio -no-window:
-        background: true
-        parallel: true
-    # wait for emulator to have booted
-    - circle-android wait-for-boot
-    # Sleeping isn't a brilliant fix...
-    - sleep 30
-    - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-$(date +"%T").png
-    - adb shell input keyevent 82
-    - ./gradlew connectedAndroidTest -PdisablePreDex --console=plain --info
-    #- fb-adb devices
-    - fb-adb rcmd screencap -p > $CIRCLE_ARTIFACTS/screen-$(date +"%T").png
+version: 2
+jobs:
+  build:
+    working_directory: ~/calabash-test
+    docker:
+      # - image: gusterveltra/calabash-test:0.0.1
+      - image: circleci/android:api-26-alpha
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout
+      - run: echo $ANDROID_HOME
+      - run: 
+          name: Remove local.properties from the project
+          command: rm local.properties
+
+      # - run: gem install bundler
+      # - run: bundle update
+      # - run: gem search json --local
+
+      - run: sdkmanager --update
+      - run: sdkmanager --list --verbose | grep system-images
+      - run: sdkmanager "build-tools;27.0.2"
+      
+      - run:
+          name: Setup emulator
+          command: sdkmanager "system-images;android-25;google_apis;armeabi-v7a" && echo "no" | avdmanager create avd -n device1 -k "system-images;android-25;google_apis;armeabi-v7a"
+      - run:
+          name: Validating AVD
+          command: emulator -list-avds
+      # - run:
+      #     name: Launch emulator
+      #     command: export LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib && emulator64-arm -avd device1 -noaudio -no-boot-anim -no-window -accel on
+      #     background: false
+      - run:
+          name: 'Starting Android Emulator:'
+          command: emulator -avd device1 -no-audio -no-window
+      
+      - run: circle-android wait-for-boot
+      
+      - run:
+          name: Unlock the emulator
+          command: adb shell input keyevent 82
+      
+      - run:
+          name: Generating APK file for Testing
+          command: ./gradlew ./assembleDebug
+
+      - run: keytool -genkey -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+      - run: calabash-android run app/build/outputs/apk/app-debug.apk
