@@ -8,6 +8,12 @@ app:
   - GRADLE_BUILD_FILE_PATH: build.gradle
   - GRADLEW_PATH: ./gradlew
 
+trigger_map:
+- push_branch: '*'
+  workflow: install-ruby
+- pull_request_source_branch: '*'
+  workflow: install-ruby
+
 workflows:
   # ----------------------------------------------------------------
   # --- workflow to Step Test
