@@ -11,7 +11,13 @@ app:
 workflows:
   # ----------------------------------------------------------------
   # --- workflow to Step Test
-  primary:
+  install-ruby:
     steps:
     - ruby-script@2.1.0:
-      title: Installing Ruby on VM
+        title: Installing Ruby on VM
+    - script:
+        title: Check Ruby Version
+        inputs:
+        - content: |-
+            #!/bin/bash
+            gem list calabash-android
