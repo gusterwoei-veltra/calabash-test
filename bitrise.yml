@@ -26,4 +26,6 @@ workflows:
         inputs:
         - content: |-
             #!/bin/bash
+            ls
             gem list calabash-android
+            calabash-android run app/build/outputs/apk/app-debug.apk
