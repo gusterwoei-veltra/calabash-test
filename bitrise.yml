@@ -1,26 +1,27 @@
-format_version: "5"
+---
+format_version: '1'
 default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
 project_type: android
-
 app:
   envs:
-  - RELEASE_VERSION: 1.3.2
+  - RELEASE_VERSION: 1.0.0
   - GRADLE_BUILD_FILE_PATH: build.gradle
-  - GRADLEW_PATH: ./gradlew
-
+  - GRADLEW_PATH: "./gradlew"
+  - BITRISE_EMULATOR_NAME: android-25-armeabi-v7a
+  - EMULATOR_PLATFORM: android-25
+  - EMULATOR_TAG: google_apis
 trigger_map:
-- push_branch: '*'
+- push_branch: "*"
   workflow: main
-- pull_request_source_branch: '*'
+- pull_request_source_branch: "*"
   workflow: main
-
 workflows:
-  # initialize
+  
   app-init:
     steps:
     - script@1.1.5:
         title: Do anything with Script step
-
+  
   install-ruby:
     before_run:
     - app-init
@@ -33,6 +34,13 @@ workflows:
             brew uninstall ruby
             brew install ruby@2.3
             brew link --force ruby@2.3
+            echo 'export PATH=/usr/local/lib/ruby/gems/2.3.0/bin:$PATH' >> ~/.bash_profile
+            rm /usr/local/bin/bundle
+            ln -s /usr/local/lib/ruby/gems/2.3.0/bin/bundle /usr/local/bin/bundle
+
+            # gem install calabash-android
+            # ls -la /usr/local/lib/ruby/gems/2.3.0/bin | grep calabash
+            # calabash-android -v
     after_run:
     - check-ruby-version
   
@@ -45,34 +53,39 @@ workflows:
             #!/bin/bash
             echo 'checking ruby version'
             ruby -v
-  
+
   main:
     before_run:
-    - app-init
+    - install-ruby 
     - check-ruby-version
     steps:
     - activate-ssh-key@3.1.1:
         run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
     - git-clone@4.0.5: {}
     - cache-pull@2.0.1: {}
-    - ruby-script@2.1.0:
-        title: Installing Ruby on VM
+    - ruby-script@2.1.0: {}
     - script:
         title: Install Ruby Gems
         inputs:
         - content: |-
             bundle install
-            gem list calabash-android
     - install-missing-android-tools@2.0.6: {}
     - gradle-runner@1.8.0:
         inputs:
-        - gradle_file: $GRADLE_BUILD_FILE_PATH
+        - gradle_file: "$GRADLE_BUILD_FILE_PATH"
         - gradle_task: assembleDebug
-        - gradlew_path: $GRADLEW_PATH
+        - gradlew_path: "$GRADLEW_PATH"
+    - create-android-emulator@1.1.5:
+        inputs:
+        - name: "$BITRISE_EMULATOR_NAME"
     - start-android-emulator@1.3.2: {}
-    - wait-for-android-emulator@1.0.3: {}
+    - script:
+        title: Unlock Android Emulator screen
+        inputs:
+        - content: adb shell input keyevent 82
     - script:
         title: Start Calabash Test
         inputs:
         - content: |-
+            export PATH=/usr/local/lib/ruby/gems/2.3.0/bin:$PATH
             calabash-android run app/build/outputs/apk/app-debug.apk
