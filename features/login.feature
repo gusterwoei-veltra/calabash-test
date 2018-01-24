@@ -3,7 +3,7 @@ Feature: User Login
     When I enter "admin" to "Username" text box
     When I enter "password" to "Password" text box
     When I tap the "LOG IN" button
-    Then I should see the "Welcome"
+    Then I should see "Welcome"
     When I tap the "LOGOUT" button
     Then I should be logged out
   
