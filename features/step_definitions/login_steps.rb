@@ -1,5 +1,7 @@
 require 'calabash-android/calabash_steps'
 
+WAIT_TIMEOUT = 60.to_f
+
 # When("I enter {string} to {string} text box") do |value, field| # this is a valid way too
 When(/^I enter "([^\"]*)" to "([^\"]*)" text box$/) do |value, field| # this is the regex way
     query("* marked:'#{field}'", setText: "")
