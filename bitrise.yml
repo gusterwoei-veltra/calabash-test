@@ -7,21 +7,18 @@ app:
   - RELEASE_VERSION: 1.0.0
   - GRADLE_BUILD_FILE_PATH: build.gradle
   - GRADLEW_PATH: "./gradlew"
-  - BITRISE_EMULATOR_NAME: android-25-armeabi-v7a
-  - EMULATOR_PLATFORM: android-25
-  - EMULATOR_TAG: google_apis
+  - BITRISE_EMULATOR_NAME: android-armeabi-v7a
+  - EMULATOR_PLATFORM: android-21
 trigger_map:
 - push_branch: "*"
   workflow: main
 - pull_request_source_branch: "*"
   workflow: main
 workflows:
-  
   app-init:
     steps:
     - script@1.1.5:
         title: Do anything with Script step
-  
   install-ruby:
     before_run:
     - app-init
@@ -38,12 +35,12 @@ workflows:
             rm /usr/local/bin/bundle
             ln -s /usr/local/lib/ruby/gems/2.3.0/bin/bundle /usr/local/bin/bundle
 
+            # FOR TESTING USE
             # gem install calabash-android
             # ls -la /usr/local/lib/ruby/gems/2.3.0/bin | grep calabash
             # calabash-android -v
     after_run:
     - check-ruby-version
-  
   check-ruby-version:
     steps:
     - script:
@@ -53,10 +50,9 @@ workflows:
             #!/bin/bash
             echo 'checking ruby version'
             ruby -v
-
   main:
     before_run:
-    - install-ruby 
+    - install-ruby
     - check-ruby-version
     steps:
     - activate-ssh-key@3.1.1:
@@ -67,8 +63,7 @@ workflows:
     - script:
         title: Install Ruby Gems
         inputs:
-        - content: |-
-            bundle install
+        - content: bundle install
     - install-missing-android-tools@2.0.6: {}
     - gradle-runner@1.8.0:
         inputs:
@@ -77,6 +72,7 @@ workflows:
         - gradlew_path: "$GRADLEW_PATH"
     - create-android-emulator@1.1.5:
         inputs:
+        - platform: "$EMULATOR_PLATFORM"
         - name: "$BITRISE_EMULATOR_NAME"
     - start-android-emulator@1.3.2: {}
     - script:
