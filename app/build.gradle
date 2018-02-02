@@ -1,4 +1,22 @@
 apply plugin: 'com.android.application'
+apply plugin: 'deploygate'
+
+deploygate {
+   userName = 'gusterwoei'
+   token = 'e3f0c528a5d867d4ba8c3701662ead550f780eab'
+   
+   apks {
+        debug {
+            distributionKey = '72d961e532534981071c995427a03dff60ac3e34'
+            sourceFile = file('build/outputs/apk/app-debug.apk')
+
+            // the release note appeared in the DeployGate distribution page for every release, change it when necessary
+            def note = "App new release, from App Center"
+            message = note
+            releaseNote = note
+        }
+    }
+}
 
 android {
     compileSdkVersion 26
