@@ -1,15 +1,23 @@
 #!/usr/bin/env bash
 
 # Run calabash test on App Center
-appcenter test run calabash \
+result=$(appcenter test run calabash \
 --app "seongwoei.chua/calabash-test" \
 --devices "seongwoei.chua/nexus" \
 --app-path app/build/outputs/apk/app-debug.apk  \
 --test-series "master" \
 --locale "en_US" \
---project-dir .
+--project-dir .)
 
 # calabash-android run app/build/outputs/apk/app-debug.apk
+
+# Check result status
+length=${#result}
+start=$(expr $length - 36)
+testid=${result:start:length}
+appcenter test status \
+--test-run-id ${testid} \
+--app seongwoei.chua/calabash-test
 
 # Validate the cloud testing result
 echo 'Test Result:'
@@ -23,3 +31,18 @@ if [ $? -eq 0 ]; then
 else
    echo -e "\033[31m FAILED \033[0m"
 fi
+
+# result="Current test status: Done!
+# Total scenarios: 2
+# 1 passed
+# 1 failed
+# Total steps: 14
+# Error: There were Test Failures.
+# Test Report: https://appcenter.ms/users/seongwoei.chua/apps/calabash-test/test/series/master/runs/eccb3977-21a1-4f0d-b114-e27f89a0c85c"
+# length=${#result}
+# start=$(expr $length - 36)
+# testid=${result:start:length}
+
+# appcenter test status \
+# --test-run-id ${testid} \
+# --app seongwoei.chua/calabash-test
