@@ -7,7 +7,7 @@ jobs:
       - image: circleci/android:api-26-alpha
     steps:
       - checkout
-      - run: curl -sL https://deb.nodesource.com/setup_4.x | sudo -E bash -
+      - run: curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
       - run: sudo apt-get install -y nodejs
       - run: npm -v
       - run: npm install -g appcenter-cli
