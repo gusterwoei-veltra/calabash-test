@@ -19,16 +19,19 @@ workflows:
         title: Install appcenter CLI
         inputs:
         - content: |-
-            npm -v
             npm install -g appcenter-cli
-            appcenter help
-            ls
   main:
     before_run:
     - app-init
     steps:
+    - activate-ssh-key@3.1.1:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@4.0.5: {}
+    - install-missing-android-tools@2.0.6: {}
     - script:
         title: Start Testing
         inputs:
         - content: |-
+            bundle install
+            ./gradlew assembleDebug
             ./appcenter-post-build.sh

@@ -9,3 +9,6 @@ jobs:
       - checkout
       - run: npm install -g appcenter-cli
       - run: appcenter help
+      - run: bundle install
+      - run: ./gradlew assembleDebug
+      - run: ./appcenter-post-build.sh
