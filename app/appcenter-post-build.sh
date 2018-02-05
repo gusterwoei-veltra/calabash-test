@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-echo '> Check Path'
-bundle install
-appcenter test prepare calabash
-
 # Run calabash test on App Center
 echo '> Running Calabash Test:'
 appcenter test run calabash \

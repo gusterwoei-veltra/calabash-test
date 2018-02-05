@@ -7,6 +7,7 @@ appcenter test run calabash \
 --app-path app/build/outputs/apk/app-debug.apk  \
 --test-series "master" \
 --locale "en_US" \
+--token "1478f130d2f353fd7ef0dbe3a3abe927b8a814ca" \
 --project-dir .
 
 # Check result status

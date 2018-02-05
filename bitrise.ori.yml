@@ -1,0 +1,84 @@
+---
+format_version: '1'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: android
+app:
+  envs:
+  - RELEASE_VERSION: 1.0.0
+  - GRADLE_BUILD_FILE_PATH: build.gradle
+  - GRADLEW_PATH: "./gradlew"
+  - BITRISE_EMULATOR_NAME: android-armeabi-v7a
+  - EMULATOR_PLATFORM: android-21
+trigger_map:
+- push_branch: "*"
+  workflow: main
+- pull_request_source_branch: "*"
+  workflow: main
+workflows:
+  app-init:
+    steps:
+    - script@1.1.5:
+        title: Do anything with Script step
+  install-ruby:
+    before_run:
+    - app-init
+    steps:
+    - script:
+        title: Install new ruby version
+        inputs:
+        - content: |-
+            #!/bin/bash
+            brew uninstall ruby
+            brew install ruby@2.3
+            brew link --force ruby@2.3
+            echo 'export PATH=/usr/local/lib/ruby/gems/2.3.0/bin:$PATH' >> ~/.bash_profile
+            rm /usr/local/bin/bundle
+            ln -s /usr/local/lib/ruby/gems/2.3.0/bin/bundle /usr/local/bin/bundle
+    after_run:
+    - check-ruby-version
+  check-ruby-version:
+    steps:
+    - script:
+        title: Check Ruby Version
+        inputs:
+        - content: |-
+            #!/bin/bash
+            echo 'checking ruby version'
+            ruby -v
+  main:
+    before_run:
+    - install-ruby
+    - check-ruby-version
+    steps:
+    - activate-ssh-key@3.1.1:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@4.0.5: {}
+    - cache-pull@2.0.1: {}
+    - ruby-script@2.1.0: {}
+    - script:
+        title: Install Ruby Gems
+        inputs:
+        - content: bundle install
+    - install-missing-android-tools@2.0.6: {}
+    - gradle-runner@1.8.0:
+        inputs:
+        - gradle_file: "$GRADLE_BUILD_FILE_PATH"
+        - gradle_task: assembleDebug
+        - gradlew_path: "$GRADLEW_PATH"
+    - create-android-emulator@1.1.5:
+        inputs:
+        - platform: "$EMULATOR_PLATFORM"
+        - name: "$BITRISE_EMULATOR_NAME"
+    - start-android-emulator@1.3.2: {}
+    - script:
+        title: Check emulator status and unlock screen
+        inputs:
+        - content: |-
+            adb devices
+            adb shell input keyevent 82
+    - script:
+        title: Start Calabash Test
+        inputs:
+        - content: |-
+            export PATH=/usr/local/lib/ruby/gems/2.3.0/bin:$PATH
+            calabash-android run app/build/outputs/apk/app-debug.apk
