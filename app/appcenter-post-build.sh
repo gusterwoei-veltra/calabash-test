@@ -7,11 +7,11 @@ ls $APPCENTER_OUTPUT_DIRECTORY
 appcenter test run calabash \
 --app "seongwoei.chua/calabash-test" \
 --devices "seongwoei.chua/nexus" \
---app-path build/outputs/apk/app-debug.apk  \
+--app-path $APPCENTER_OUTPUT_DIRECTORY/app-debug.apk  \
 --test-series "master" \
 --locale "en_US" \
 --token $API_TOKEN
---project-dir $APPCENTER_OUTPUT_DIRECTORY
+--project-dir $APPCENTER_SOURCE_DIRECTORY
 
 # Check result status
 status=$?
