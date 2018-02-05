@@ -5,10 +5,10 @@ echo '> Running Calabash Test:'
 appcenter test run calabash \
 --app "seongwoei.chua/calabash-test" \
 --devices "seongwoei.chua/nexus" \
---app-path $APPCENTER_OUTPUT_DIRECTORY/app-debug.apk  \
+--app-path $APPCENTER_OUTPUT_DIRECTORY/app-debug.apk \
 --test-series "master" \
 --locale "en_US" \
---token $API_TOKEN
+--token $API_TOKEN \
 --project-dir $APPCENTER_SOURCE_DIRECTORY
 
 # Check result status
