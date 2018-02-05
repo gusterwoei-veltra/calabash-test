@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
 
 echo '> Check Path'
-pwd
-ls
-bundle -v
-bundle install
-ruby -v
-gem -v
-gem list test-cloud
+# bundle install
+appcenter test prepare calabash
 
 # Run calabash test on App Center
 echo '> Running Calabash Test:'
