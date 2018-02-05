@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Login appcenter account (1478f130d2f353fd7ef0dbe3a3abe927b8a814ca)
-appcenter login --token $API_TOKEN
+ls $APPCENTER_OUTPUT_DIRECTORY
+ls $APPCENTER_SOURCE_DIRECTORY
 
 # Run calabash test on App Center
 appcenter test run calabash \
@@ -10,6 +11,7 @@ appcenter test run calabash \
 --app-path build/outputs/apk/app-debug.apk  \
 --test-series "master" \
 --locale "en_US" \
+--token $API_TOKEN
 --project-dir .
 
 # Check result status
@@ -18,7 +20,7 @@ status=$?
 # calabash-android run app/build/outputs/apk/app-debug.apk
 
 # Validate the cloud testing result
-echo 'Test Result:'
+echo '> Test Result:'
 if [ $status -eq 0 ]; then
    echo -e "\033[92m SUCCESS \033[0m"
 
