@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 echo '> Building Calabash test server apk'
+bundle install
 calabash-android build $APPCENTER_OUTPUT_DIRECTORY/app-debug.apk
 
 # Run calabash test on App Center
