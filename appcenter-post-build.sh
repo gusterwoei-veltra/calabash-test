@@ -13,7 +13,6 @@ appcenter test run calabash \
 # Check result status
 status=$?
 
-# calabash-android run app/build/outputs/apk/app-debug.apk
 
 # Validate the cloud testing result
 echo 'Test Result:'

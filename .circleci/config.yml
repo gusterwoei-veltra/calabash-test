@@ -9,9 +9,7 @@ jobs:
       - checkout
       - run: curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
       - run: sudo apt-get install -y nodejs
-      - run: npm -v
       - run: sudo npm install -g appcenter-cli
-      - run: appcenter help
       - run: bundle install
       - run: ./gradlew assembleDebug
       - run: ./appcenter-post-build.sh
