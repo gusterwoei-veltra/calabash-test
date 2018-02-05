@@ -2,6 +2,9 @@
 
 echo '> Check Path'
 pwd
+ls
+bundle -v
+bundle install
 ruby -v
 gem -v
 gem list test-cloud
