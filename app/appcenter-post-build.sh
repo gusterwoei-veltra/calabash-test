@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-# Login appcenter account (1478f130d2f353fd7ef0dbe3a3abe927b8a814ca)
-ls $APPCENTER_OUTPUT_DIRECTORY
-
 # Run calabash test on App Center
+echo '> Running Calabash Test:'
 appcenter test run calabash \
 --app "seongwoei.chua/calabash-test" \
 --devices "seongwoei.chua/nexus" \
