@@ -11,5 +11,6 @@ jobs:
       - run: sudo apt-get install -y nodejs
       - run: sudo npm install -g appcenter-cli
       - run: bundle install
+      - run: calabash-android build app/build/outputs/apk/app-debug.apk
       - run: ./gradlew assembleDebug
       - run: ./appcenter-post-build.sh
