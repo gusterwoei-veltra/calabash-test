@@ -3,8 +3,6 @@
 echo '> Building Calabash test server apk'
 bundle install
 calabash-android build $APPCENTER_OUTPUT_DIRECTORY/app-debug.apk
-ls $APPCENTER_SOURCE_DIRECTORY
-ls $APPCENTER_SOURCE_DIRECTORY/test_servers
 
 echo '> Check local directory'
 ls/test_servers
@@ -18,7 +16,7 @@ appcenter test run calabash \
 --test-series "master" \
 --locale "en_US" \
 --token $API_TOKEN \
---project-dir $APPCENTER_SOURCE_DIRECTORY
+--project-dir .
 
 # Check result status
 status=$?
