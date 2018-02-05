@@ -2,7 +2,6 @@
 
 # Login appcenter account (1478f130d2f353fd7ef0dbe3a3abe927b8a814ca)
 ls $APPCENTER_OUTPUT_DIRECTORY
-ls $APPCENTER_SOURCE_DIRECTORY
 
 # Run calabash test on App Center
 appcenter test run calabash \
@@ -12,7 +11,7 @@ appcenter test run calabash \
 --test-series "master" \
 --locale "en_US" \
 --token $API_TOKEN
---project-dir .
+--project-dir $APPCENTER_OUTPUT_DIRECTORY
 
 # Check result status
 status=$?
