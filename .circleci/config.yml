@@ -7,13 +7,10 @@ jobs:
       - image: circleci/android:api-26-alpha
     steps:
       - checkout
-      - run: ls
-      - run: pwd
-      - run: export
-      # - run: curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
-      # - run: sudo apt-get install -y nodejs
-      # - run: sudo npm install -g appcenter-cli
-      # - run: bundle install
-      # - run: calabash-android build app/build/outputs/apk/app-debug.apk
-      # - run: ./gradlew assembleDebug
-      # - run: ./appcenter-post-build.sh
+      - run: curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
+      - run: sudo apt-get install -y nodejs
+      - run: sudo npm install -g appcenter-cli
+      - run: bundle install
+      - run: ./gradlew assembleDebug
+      - run: calabash-android build app/build/outputs/apk/app-debug.apk
+      - run: ./appcenter-post-build.sh
