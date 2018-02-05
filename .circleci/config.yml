@@ -3,14 +3,13 @@ jobs:
   build:
     working_directory: ~/calabash-test
     docker:
-      # - image: gusterveltra/calabash-test:0.0.1
       - image: circleci/android:api-26-alpha
     steps:
       - checkout
-      # - run: curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
-      # - run: sudo apt-get install -y nodejs
-      # - run: sudo npm install -g appcenter-cli
-      # - run: bundle install
-      # - run: ./gradlew assembleDebug
-      # - run: calabash-android build app/build/outputs/apk/app-debug.apk
-      # - run: ./appcenter-post-build.sh
+      - run: curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
+      - run: sudo apt-get install -y nodejs
+      - run: sudo npm install -g appcenter-cli
+      - run: bundle install
+      - run: ./gradlew assembleDebug
+      - run: calabash-android build app/build/outputs/apk/app-debug.apk
+      - run: ./deploy-appcenter.sh

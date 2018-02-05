@@ -42,4 +42,4 @@ workflows:
             bundle install
             calabash-android build app/build/outputs/apk/app-debug.apk
             ./gradlew assembleDebug
-            ./appcenter-post-build.sh
+            ./deploy-appcenter.sh

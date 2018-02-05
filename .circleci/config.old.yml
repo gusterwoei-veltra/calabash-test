@@ -1,3 +1,5 @@
+# Config that previously used to run calabash test on an Android emulator
+
 version: 2
 jobs:
   build:

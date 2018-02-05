@@ -1,14 +1,11 @@
 #!/usr/bin/env bash
+# appcenter's post-build script
 
-echo '> Building Calabash test server apk'
 cd ..
 bundle install
-calabash-android build $APPCENTER_OUTPUT_DIRECTORY/app-debug.apk
-# ls $APPCENTER_SOURCE_DIRECTORY
-# ls $APPCENTER_SOURCE_DIRECTORY/test_servers
 
-echo '> Check local directory'
-ls test_servers
+echo '> Building Calabash test server apk'
+calabash-android build $APPCENTER_OUTPUT_DIRECTORY/app-debug.apk
 
 # Run calabash test on App Center
 echo '> Running Calabash Test:'
