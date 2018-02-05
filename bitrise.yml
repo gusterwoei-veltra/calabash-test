@@ -34,11 +34,6 @@ workflows:
             echo 'export PATH=/usr/local/lib/ruby/gems/2.3.0/bin:$PATH' >> ~/.bash_profile
             rm /usr/local/bin/bundle
             ln -s /usr/local/lib/ruby/gems/2.3.0/bin/bundle /usr/local/bin/bundle
-
-            # FOR TESTING USE
-            # gem install calabash-android
-            # ls -la /usr/local/lib/ruby/gems/2.3.0/bin | grep calabash
-            # calabash-android -v
     after_run:
     - check-ruby-version
   check-ruby-version:
