@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+echo '> Check Path'
+pwd
+ruby -v
+gem -v
+gem list test-cloud
+
 # Run calabash test on App Center
 echo '> Running Calabash Test:'
 appcenter test run calabash \
