@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Login appcenter account (1478f130d2f353fd7ef0dbe3a3abe927b8a814ca)
+appcenter login --token $API_TOKEN
+
 # Run calabash test on App Center
 appcenter test run calabash \
 --app "seongwoei.chua/calabash-test" \
