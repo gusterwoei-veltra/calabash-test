@@ -21,17 +21,20 @@ appcenter test run calabash \
 # Check result status
 status=$?
 
-# calabash-android run app/build/outputs/apk/app-debug.apk
-
 # Validate the cloud testing result
-echo '> Test Result:'
-if [ $status -eq 0 ]; then
-   echo -e "\033[92m SUCCESS \033[0m"
+branch=$APPCENTER_BRANCH
+if [[ $branch =~ ^"develop-v".*$ || $branch =~ ^"develop"$ ]]; then
+   echo '> Test Result:'
+   if [ $status -eq 0 ]; then
+      echo -e "\033[92m SUCCESS \033[0m"
 
-   echo ""
-   echo 'Deploying APK to DeployGate...'
-   ./gradlew uploadDeployGateDebug
-   echo -e "\033[92m App is successfully deployed to Deploy Gate \033[0m"
-else
-   echo -e "\033[31m FAILED \033[0m"
+      echo ""
+      echo 'Deploying APK to DeployGate...'
+      ./gradlew uploadDeployGateDebug
+      echo -e "\033[92m App is successfully deployed to Deploy Gate \033[0m"
+   else
+      echo -e "\033[31m FAILED \033[0m"
+   fi
+elif [ $branch == "master" ]; then
+   # deploy to google playstore
 fi
