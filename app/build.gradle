@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'deploygate'
+apply plugin: 'com.github.triplet.play'
 
 deploygate {
    userName = 'gusterwoei'
@@ -21,18 +22,51 @@ deploygate {
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
+
+    playAccountConfigs {
+        defaultAccountConfig {
+            serviceAccountEmail = SERVICE_ACCOUNT_EMAIL
+            jsonFile = file('../google-play-dev-api.json')
+        }
+    }
+
     defaultConfig {
         applicationId "com.gusterwoei.calabashtest"
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        playAccountConfig = playAccountConfigs.defaultAccountConfig
     }
+
+    signingConfigs {
+        release {
+            keyAlias 'calabash-test'
+            keyPassword 'password'
+            storeFile file('../release.keystore')
+            storePassword 'password'
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+
+    play {
+        track = 'alpha' // one of [ 'alpha', 'beta', 'rollout' ]
+        //userFraction = 0.2 // only necessary for 'rollout', in this case default is 0.1 (10% of the target)
+        untrackOld = true
+    }
+
+    flavorDimensions 'default'
+    productFlavors {
+        dev {
+            dimension 'default'
         }
     }
 }
@@ -45,7 +79,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.jakewharton:butterknife:8.8.1'
-    compile 'com.jakewharton:butterknife-compiler:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.roughike:bottom-bar:2.3.1'
     testCompile 'junit:junit:4.12'
 }

@@ -11,3 +11,5 @@
 /test_servers
 .irb-history
 screenshot_*.png
+gradle.properties
+google-play-dev-api.json
