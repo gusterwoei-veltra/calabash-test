@@ -40,5 +40,5 @@ elif [ $branch == "master" ]; then
    # NOTE: Remember to update the 'whatsnew' file for the release note
 
    # uncomment to enable
-   # ./gradlew publishApkProdRelease
+   # ./gradlew publishApkRelease
 fi
