@@ -38,5 +38,7 @@ if [[ $branch =~ ^"develop-v".*$ || $branch =~ ^"develop"$ ]]; then
 elif [ $branch == "master" ]; then
    # deploy to google playstore
    # NOTE: Remember to update the 'whatsnew' file for the release note
-   ./gradlew publishApkProdRelease
+
+   # uncomment to enable
+   # ./gradlew publishApkProdRelease
 fi
