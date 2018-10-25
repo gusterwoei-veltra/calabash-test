@@ -2,37 +2,31 @@ workflows:
   version: 2
   build-dev: # ignore all normal git branches (untagged)
     jobs:
-      - build:
+      - init:
           filters:
             branches:
               only: /^develop.*/
             tags:
               ignore: /.*/
-      - get-live-credentials:
-          requires: 
-            - build
       - deploy-dev:
           requires: 
-            - get-live-credentials
+            - init
   build-live: # ignore all normal git branches (untagged)
     jobs:
-      - build:
+      - init:
           filters:
             branches:
               only: /master/
             tags:
               ignore: /.*/
-      - get-live-credentials:
-          requires: 
-            - build
       - deploy-live:
           requires: 
-            - get-live-credentials
+            - init
 
 
 version: 2
 jobs:
-  build:
+  init:
     working_directory: ~/app
     docker:
       - image: circleci/android:api-26-ndk-r17b
@@ -43,8 +37,12 @@ jobs:
       - restore_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
       - run:
-          name: Chmod permissions
-          command: sudo chmod +x ./gradlew
+          name: 'Preparing for APK Signing'
+          command: |
+              # download keystore when building live version
+              ls
+              curl -L -o release.keystore "${KEYSTORE_URL}"
+              curl -L -o gradle.properties "${GRADLE_PROP_URL}"
       - save_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
           paths:
@@ -54,24 +52,24 @@ jobs:
           paths:
             - .
   
-  get-live-credentials:
-    working_directory: ~/app
-    machine: true
-    steps:
-      - attach_workspace:
-          at: ~/app
-      - run:
-          name: 'Preparing for APK Signing if necessary'
-          command: |
-              # download keystore when building live version
-              ls
-              curl -L -o release.keystore "${KEYSTORE_URL}"
-              curl -L -o gradle.properties "${GRADLE_PROP_URL}"
-      - persist_to_workspace:
-          root: .
-          paths:
-            - release.keystore
-            - gradle.properties
+  # get-live-credentials:
+  #   working_directory: ~/app
+  #   machine: true
+  #   steps:
+  #     - attach_workspace:
+  #         at: ~/app
+  #     - run:
+  #         name: 'Preparing for APK Signing if necessary'
+  #         command: |
+  #             # download keystore when building live version
+  #             ls
+  #             curl -L -o release.keystore "${KEYSTORE_URL}"
+  #             curl -L -o gradle.properties "${GRADLE_PROP_URL}"
+  #     - persist_to_workspace:
+  #         root: .
+  #         paths:
+  #           - release.keystore
+  #           - gradle.properties
 
   deploy-dev:
     working_directory: ~/app
