@@ -51,6 +51,7 @@ jobs:
             - ~/.gradle
   
   get-live-credentials:
+    machine: true
     steps:
       - run:
           name: 'Preparing for APK Signing if necessary'
@@ -65,6 +66,7 @@ jobs:
             - gradle.properties
 
   deploy-dev:
+    machine: true
     steps:
       - attach_workspace:
           at: ~/app
@@ -75,6 +77,7 @@ jobs:
               ./gradlew assembleDebug
   
   deploy-live:
+    machine: true
     steps:
       - attach_workspace:
           at: ~/app
