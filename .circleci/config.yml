@@ -1,15 +1,79 @@
+workflows:
+  version: 2
+  build-dev: # ignore all normal git branches (untagged)
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: /^develop.*/
+            tags:
+              ignore: /.*/
+      - get-live-credentials
+      - deploy-dev
+  build-live: # ignore all normal git branches (untagged)
+    jobs:
+      - build:
+          filters:
+            branches:
+              only: /master/
+            tags:
+              ignore: /.*/
+      - get-live-credentials
+      - deploy-live
+
+
 version: 2
 jobs:
-  build:
-    working_directory: ~/calabash-test
-    docker:
-      - image: circleci/android:api-26-alpha
+  get-live-credentials:
     steps:
-      - checkout
-      - run: curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
-      - run: sudo apt-get install -y nodejs
-      - run: sudo npm install -g appcenter-cli
-      - run: bundle install
-      - run: ./gradlew assembleDebug
-      - run: calabash-android build app/build/outputs/apk/app-debug.apk
-      - run: ./deploy-appcenter.sh
+      - run:
+          name: 'Preparing for APK Signing if necessary'
+          command: |
+              # download keystore when building live version
+              curl -L -o live.jks "${KEYSTORE_URL}"
+              curl -L -o gradle.properties "${GRADLE_PROP_URL}"
+      - persist_to_workspace:
+          root: ~/app
+          paths:
+            - live.jks
+            - gradle.properties
+
+  deploy-dev:
+    steps:
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: 'Deploying to Deploygate'
+          command: |
+              echo 'Deploying to DeployGate'
+              ./gradlew assembleDebug
+  
+  deploy-live:
+    steps:
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: 'Deploying to Playstore'
+          command: |
+              echo 'Deploying to Playstore'
+              ./gradlew assembleRelease
+      
+  # main job to deploy to Playstore
+  build:
+    working_directory: ~/app
+    docker:
+      - image: circleci/android:api-26-ndk-r17b
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout # checkout source codes
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Chmod permissions
+          command: sudo chmod +x ./gradlew
+      - save_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+          paths:
+            - ~/.gradle
+                

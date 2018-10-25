@@ -42,10 +42,10 @@ android {
 
     signingConfigs {
         release {
-            keyAlias 'calabash-test'
-            keyPassword 'password'
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PWD
             storeFile file('../release.keystore')
-            storePassword 'password'
+            storePassword STORE_PWD
         }
     }
 
