@@ -42,10 +42,10 @@ android {
 
     signingConfigs {
         release {
-            keyAlias KEY_ALIAS
-            keyPassword KEY_PWD
+            keyAlias project.property('KEY_ALIAS')
+            keyPassword project.property('KEY_PWD')
             storeFile file('../release.keystore')
-            storePassword STORE_PWD
+            storePassword project.property('STORE_PWD')
         }
     }
 
