@@ -8,8 +8,12 @@ workflows:
               only: /^develop.*/
             tags:
               ignore: /.*/
-      - get-live-credentials
-      - deploy-dev
+      - get-live-credentials:
+          requires: 
+            - build
+      - deploy-dev:
+          requires: 
+            - get-live-credentials
   build-live: # ignore all normal git branches (untagged)
     jobs:
       - build:
@@ -18,8 +22,12 @@ workflows:
               only: /master/
             tags:
               ignore: /.*/
-      - get-live-credentials
-      - deploy-live
+      - get-live-credentials:
+          requires: 
+            - build
+      - deploy-live:
+          requires: 
+            - get-live-credentials
 
 
 version: 2
