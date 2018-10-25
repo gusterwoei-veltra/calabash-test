@@ -16,7 +16,7 @@ workflows:
       - init:
           filters:
             branches:
-              only: /master/
+              only: master
             tags:
               ignore: /.*/
       - deploy-live:
@@ -51,26 +51,7 @@ jobs:
           root: .
           paths:
             - .
-  
-  # get-live-credentials:
-  #   working_directory: ~/app
-  #   machine: true
-  #   steps:
-  #     - attach_workspace:
-  #         at: ~/app
-  #     - run:
-  #         name: 'Preparing for APK Signing if necessary'
-  #         command: |
-  #             # download keystore when building live version
-  #             ls
-  #             curl -L -o release.keystore "${KEYSTORE_URL}"
-  #             curl -L -o gradle.properties "${GRADLE_PROP_URL}"
-  #     - persist_to_workspace:
-  #         root: .
-  #         paths:
-  #           - release.keystore
-  #           - gradle.properties
-
+            
   deploy-dev:
     working_directory: ~/app
     docker:
