@@ -24,13 +24,31 @@ workflows:
 
 version: 2
 jobs:
+  build:
+    working_directory: ~/app
+    docker:
+      - image: circleci/android:api-26-ndk-r17b
+    environment:
+      JVM_OPTS: -Xmx3200m
+    steps:
+      - checkout # checkout source codes
+      - restore_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+      - run:
+          name: Chmod permissions
+          command: sudo chmod +x ./gradlew
+      - save_cache:
+          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
+          paths:
+            - ~/.gradle
+  
   get-live-credentials:
     steps:
       - run:
           name: 'Preparing for APK Signing if necessary'
           command: |
               # download keystore when building live version
-              curl -L -o live.jks "${KEYSTORE_URL}"
+              curl -L -o release.keystore "${KEYSTORE_URL}"
               curl -L -o gradle.properties "${GRADLE_PROP_URL}"
       - persist_to_workspace:
           root: ~/app
@@ -58,22 +76,4 @@ jobs:
               echo 'Deploying to Playstore'
               ./gradlew assembleRelease
       
-  # main job to deploy to Playstore
-  build:
-    working_directory: ~/app
-    docker:
-      - image: circleci/android:api-26-ndk-r17b
-    environment:
-      JVM_OPTS: -Xmx3200m
-    steps:
-      - checkout # checkout source codes
-      - restore_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-      - run:
-          name: Chmod permissions
-          command: sudo chmod +x ./gradlew
-      - save_cache:
-          key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
-          paths:
-            - ~/.gradle
                 
