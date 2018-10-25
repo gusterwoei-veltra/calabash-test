@@ -45,6 +45,8 @@ jobs:
       - run:
           name: Chmod permissions
           command: sudo chmod +x ./gradlew
+      - persist_to_workspace:
+          root: ~/app
       - save_cache:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
           paths:
@@ -62,7 +64,7 @@ jobs:
       - persist_to_workspace:
           root: ~/app
           paths:
-            - live.jks
+            - release.keystore
             - gradle.properties
 
   deploy-dev:
