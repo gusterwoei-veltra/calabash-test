@@ -75,7 +75,8 @@ jobs:
 
   deploy-dev:
     working_directory: ~/app
-    machine: true
+    docker:
+      - image: circleci/android:api-26-ndk-r17b
     steps:
       - attach_workspace:
           at: ~/app
@@ -88,7 +89,8 @@ jobs:
   
   deploy-live:
     working_directory: ~/app
-    machine: true
+    docker:
+      - image: circleci/android:api-26-ndk-r17b
     steps:
       - attach_workspace:
           at: ~/app
