@@ -82,6 +82,7 @@ jobs:
           name: 'Deploying to Deploygate'
           command: |
               echo 'Deploying to DeployGate'
+              pwd
               ./gradlew assembleDebug
   
   deploy-live:
