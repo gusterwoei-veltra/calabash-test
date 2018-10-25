@@ -49,11 +49,16 @@ jobs:
           key: jars-{{ checksum "build.gradle" }}-{{ checksum  "app/build.gradle" }}
           paths:
             - ~/.gradle
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
   
   get-live-credentials:
-    working_directory: ~/app
     machine: true
     steps:
+      - attach_workspace:
+          at: ~/app
       - run:
           name: 'Preparing for APK Signing if necessary'
           command: |
@@ -68,7 +73,7 @@ jobs:
             - gradle.properties
 
   deploy-dev:
-    working_directory: ~/app
+    # working_directory: ~/app
     machine: true
     steps:
       - attach_workspace:
@@ -80,7 +85,7 @@ jobs:
               ./gradlew assembleDebug
   
   deploy-live:
-    working_directory: ~/app
+    # working_directory: ~/app
     machine: true
     steps:
       - attach_workspace:
